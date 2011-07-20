@@ -11,7 +11,7 @@
 
 namespace komancs
 {
-    class Connection;
+    class TcpConnection;
     class TcpServer
     {
     public:
@@ -23,7 +23,7 @@ namespace komancs
         void bind();
 //      void setPort(int);
         void listen(int);
-        Connection *accept();
+        TcpConnection *accept();
 
     private:
         TcpServer(const TcpServer &);

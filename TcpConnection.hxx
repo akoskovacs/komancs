@@ -4,12 +4,12 @@
 #include <string>
 
 namespace komancs {
-    class Connection
+    class TcpConnection
     {
     public:
         enum How { ShutRead, ShutWrite, ShutReadWrite };
-        Connection(int);
-        ~Connection() { shutdown(); }
+        TcpConnection(int);
+        ~TcpConnection() { shutdown(); }
 
         void send(const char *);
         void send(const void *, int);
@@ -17,15 +17,15 @@ namespace komancs {
         void receive(char *, int);
         std::string &receive();
         void shutdown(How h = ShutReadWrite);
-        bool operator ==(const Connection &c)
+        bool operator ==(const TcpConnection &c)
         { return m_clientFd == c.descriptor(); }
 
         void setDescriptor(int fd) { m_clientFd = fd; }
         int descriptor() { return m_clientFd; }
 
     private:
-        Connection(const Connection &);
-        Connection &operator =(const Connection &);
+        TcpConnection(const TcpConnection &);
+        TcpConnection &operator =(const TcpConnection &);
 
         int m_clientFd;
     };

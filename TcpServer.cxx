@@ -1,4 +1,4 @@
-#include "Connection.hxx"
+#include "TcpConnection.hxx"
 #include "Exceptions.hxx"
 #include "TcpServer.hxx"
 
@@ -51,7 +51,7 @@ void TcpServer::listen(int backlog = 10)
         throw error::SystemException("listen()");
 }
 
-Connection *TcpServer::accept()
+TcpConnection *TcpServer::accept()
 {
     int socket;
     struct sockaddr_in clientAddr; 
@@ -60,5 +60,5 @@ Connection *TcpServer::accept()
         , (struct sockaddr *)&clientAddr, &sin_size)) == -1)
         throw error::SystemException("accept()");
 
-    return new Connection(socket);
+    return new TcpConnection(socket);
 }
