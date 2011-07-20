@@ -1,5 +1,5 @@
-#ifndef HOST_HXX
-#define HOST_HXX
+#ifndef IPV4_ADDRESS_HXX 
+#define IPV4_ADDRESS_HXX 
 
 #include <arpa/inet.h>
 #include <netinet/in.h>
@@ -37,4 +37,4 @@ namespace komancs {
     };
 }
 
-#endif // HOST_HXX
+#endif // IPV4_ADDRESS_HXX 

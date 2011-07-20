@@ -1,5 +1,5 @@
-#ifndef CONNECTION_HXX
-#define CONNECTION_HXX
+#ifndef TCP_CONNECTION_HXX
+#define TCP_CONNECTION_HXX
 
 #include <string>
 
@@ -21,7 +21,7 @@ namespace komancs {
         { return m_clientFd == c.descriptor(); }
 
         void setDescriptor(int fd) { m_clientFd = fd; }
-        int descriptor() { return m_clientFd; }
+        int descriptor() const { return m_clientFd; }
 
     private:
         TcpConnection(const TcpConnection &);
@@ -31,4 +31,4 @@ namespace komancs {
     };
 }
 
-#endif // CONNECTION_HXX
+#endif // TCP_CONNECTION_HXX

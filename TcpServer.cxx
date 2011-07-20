@@ -9,22 +9,23 @@ using namespace komancs;
 
 TcpServer::TcpServer(const char *ip, int port)
 {
-    m_address(ip, port);
+    m_address = new Ipv4Address(ip, port);
 }
 
 TcpServer::TcpServer(HostType type, int port)
 {
-    m_address(type, port);
+    m_address = new Ipv4Address(type, port);
 }
 
 TcpServer::TcpServer(const Ipv4Address &addr)
 {
-    m_address = addr;
+    *m_address = addr;
 }
 
 TcpServer::~TcpServer()
 {
     ::shutdown(m_fd, SHUT_RDWR);
+    delete m_address;
 }
 
 void TcpServer::bind()
@@ -40,8 +41,8 @@ void TcpServer::bind()
         throw error::SystemException("setsockopt()");
 
 
-    if (::bind(m_fd, (struct sockaddr *)m_address.addressPointer()
-        , m_address.size()) == -1)
+    if (::bind(m_fd, (struct sockaddr *)m_address->addressPointer()
+        , m_address->size()) == -1)
         throw error::SystemException("bind()");
 }
 
@@ -55,7 +56,7 @@ TcpConnection *TcpServer::accept()
 {
     int socket;
     struct sockaddr_in clientAddr; 
-    socklen_t sin_size = m_address.size();
+    socklen_t sin_size = m_address->size();
 	if ((socket = ::accept(m_fd
         , (struct sockaddr *)&clientAddr, &sin_size)) == -1)
         throw error::SystemException("accept()");

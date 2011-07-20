@@ -15,10 +15,10 @@ namespace komancs
     class TcpServer
     {
     public:
+        TcpServer();
         TcpServer(const char *, int);
         TcpServer(HostType, int);
         TcpServer(const Ipv4Address &);
-        TcpServer();
         ~TcpServer();
         void bind();
 //      void setPort(int);
@@ -30,7 +30,7 @@ namespace komancs
         TcpServer &operator =(const TcpServer &);
 
         int m_fd;
-        Ipv4Address m_address;
+        Ipv4Address *m_address;
     };
 }
 
