@@ -1,9 +1,8 @@
-#include "TcpConnection.hxx"
 #include "Exceptions.hxx"
+#include "TcpConnection.hxx"
 #include "TcpServer.hxx"
 
 #include <cstdlib>
-#include <iostream>
 
 using namespace komancs;
 

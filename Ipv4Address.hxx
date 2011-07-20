@@ -1,11 +1,7 @@
 #ifndef IPV4_ADDRESS_HXX 
 #define IPV4_ADDRESS_HXX 
 
-#include <arpa/inet.h>
-#include <netinet/in.h>
-#include <sys/socket.h>
-#include <sys/types.h>
-#include <unistd.h>
+#include "InetGlobals.hxx"
 
 namespace komancs {
     enum HostType {

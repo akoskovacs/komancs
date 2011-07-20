@@ -1,21 +1,16 @@
 #ifndef TCP_SERVER_HXX
 #define TCP_SERVER_HXX
 
+#include "InetGlobals.hxx"
 #include "Ipv4Address.hxx"
-
-#include <arpa/inet.h>
-#include <netinet/in.h>
-#include <sys/socket.h>
-#include <sys/types.h>
-#include <unistd.h>
 
 namespace komancs
 {
     class TcpConnection;
+
     class TcpServer
     {
     public:
-        TcpServer();
         TcpServer(const char *, int);
         TcpServer(HostType, int);
         TcpServer(const Ipv4Address &);
