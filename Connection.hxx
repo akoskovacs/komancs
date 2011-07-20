@@ -1,36 +1,33 @@
 #ifndef CONNECTION_HXX
 #define CONNECTION_HXX
 
-#include <cstring>
 #include <string>
-
-#include <arpa/inet.h>
-#include <netinet/in.h>
-#include <sys/socket.h>
-#include <sys/types.h>
-#include <unistd.h>
 
 namespace komancs {
     class Connection
     {
     public:
         enum How { ShutRead, ShutWrite, ShutReadWrite };
-        Connection(int, struct sockaddr_in *);
-        ~Connection() { shutdown(); delete m_address; }
+        Connection(int);
+        ~Connection() { shutdown(); }
 
         void send(const char *);
         void send(const void *, int);
         void send(const std::string &);
         void receive(char *, int);
         std::string &receive();
-        void setDescriptor(int fd) { m_clientFd = fd; }
-        void setAddress(struct sockaddr_in *addr)
-            { m_address = addr; }
         void shutdown(How h = ShutReadWrite);
+        bool operator ==(const Connection &c)
+        { return m_clientFd == c.descriptor(); }
+
+        void setDescriptor(int fd) { m_clientFd = fd; }
+        int descriptor() { return m_clientFd; }
 
     private:
+        Connection(const Connection &);
+        Connection &operator =(const Connection &);
+
         int m_clientFd;
-        struct sockaddr_in *m_address;
     };
 }
 

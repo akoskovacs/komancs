@@ -3,11 +3,16 @@
 
 #include <cstring>
 
+#include <arpa/inet.h>
+#include <netinet/in.h>
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <unistd.h>
+
 using namespace komancs;
 
-Connection::Connection(int fd, struct sockaddr_in *addr)
-    :m_clientFd(fd), m_address(addr)
-{ }
+Connection::Connection(int fd)
+    :m_clientFd(fd) { }
 
 void Connection::send(const char *str)
 {

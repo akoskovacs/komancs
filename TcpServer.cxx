@@ -7,13 +7,19 @@
 
 using namespace komancs;
 
-TcpServer::TcpServer(int port)
+TcpServer::TcpServer(const char *ip, int port)
 {
-    setPort(port);
-    m_address.sin_family = AF_INET;
-    m_address.sin_port = ::htons(port);
-    m_address.sin_addr.s_addr = ::htonl(INADDR_ANY);
-    std::memset(&(m_address.sin_zero), 0, 8);
+    m_address(ip, port);
+}
+
+TcpServer::TcpServer(HostType type, int port)
+{
+    m_address(type, port);
+}
+
+TcpServer::TcpServer(const Ipv4Address &addr)
+{
+    m_address = addr;
 }
 
 TcpServer::~TcpServer()
@@ -28,15 +34,14 @@ void TcpServer::bind()
     if ((m_fd = ::socket(AF_INET, SOCK_STREAM, 0)) == -1)
         throw error::SystemException("socket()");
 
-
     /* Get rid from "the socket is already in use" message */
     if (::setsockopt(m_fd, SOL_SOCKET
         , SO_REUSEADDR, &yes, sizeof(int)) == -1) 
         throw error::SystemException("setsockopt()");
 
 
-    if (::bind(m_fd, (struct sockaddr *)&m_address
-        , sizeof(struct sockaddr)) == -1)
+    if (::bind(m_fd, (struct sockaddr *)m_address.addressPointer()
+        , m_address.size()) == -1)
         throw error::SystemException("bind()");
 }
 
@@ -50,18 +55,10 @@ Connection *TcpServer::accept()
 {
     int socket;
     struct sockaddr_in clientAddr; 
-    socklen_t sin_size = sizeof(struct sockaddr_in);
+    socklen_t sin_size = m_address.size();
 	if ((socket = ::accept(m_fd
         , (struct sockaddr *)&clientAddr, &sin_size)) == -1)
         throw error::SystemException("accept()");
 
-    return new Connection(socket, &clientAddr);
-}
-
-void TcpServer::setPort(int port)
-{
-    if (port > 65536 || port < 0) 
-        throw error::InvalidPortNumber(port);
-    else
-        m_port = port;
+    return new Connection(socket);
 }

@@ -1,6 +1,8 @@
 #ifndef TCP_SERVER_HXX
 #define TCP_SERVER_HXX
 
+#include "Ipv4Address.hxx"
+
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <sys/socket.h>
@@ -13,17 +15,22 @@ namespace komancs
     class TcpServer
     {
     public:
-        TcpServer(int); 
+        TcpServer(const char *, int);
+        TcpServer(HostType, int);
+        TcpServer(const Ipv4Address &);
+        TcpServer();
         ~TcpServer();
         void bind();
-        void setPort(int);
+//      void setPort(int);
         void listen(int);
         Connection *accept();
 
     private:
-        int m_port;
+        TcpServer(const TcpServer &);
+        TcpServer &operator =(const TcpServer &);
+
         int m_fd;
-        struct ::sockaddr_in m_address;
+        Ipv4Address m_address;
     };
 }
 
