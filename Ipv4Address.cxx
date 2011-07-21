@@ -18,16 +18,16 @@ Ipv4Address::Ipv4Address(const struct ::sockaddr_in &addr)
 
 Ipv4Address::Ipv4Address(HostType type, int port)
 {
+    init();
     setPort(port);
     setHostType(type);
-    init();
 }
 
 Ipv4Address::Ipv4Address(const char *ip, int port)
 {
+    init();
     setPort(port);
     setAddress(ip);
-    init();
 }
 
 void Ipv4Address::setPort(int port)

@@ -8,16 +8,19 @@ using namespace komancs;
 
 TcpServer::TcpServer(const char *ip, int port)
 {
+    initSocket();
     m_address = new Ipv4Address(ip, port);
 }
 
 TcpServer::TcpServer(HostType type, int port)
 {
+    initSocket();
     m_address = new Ipv4Address(type, port);
 }
 
 TcpServer::TcpServer(const Ipv4Address &addr)
 {
+    initSocket();
     *m_address = addr;
 }
 
@@ -29,18 +32,8 @@ TcpServer::~TcpServer()
 
 void TcpServer::bind()
 {
-    int yes = 1;
-
-    if ((m_fd = ::socket(AF_INET, SOCK_STREAM, 0)) == -1)
-        throw error::SystemException("socket()");
-
-    /* Get rid from "the socket is already in use" message */
-    if (::setsockopt(m_fd, SOL_SOCKET
-        , SO_REUSEADDR, &yes, sizeof(int)) == -1) 
-        throw error::SystemException("setsockopt()");
-
-
-    if (::bind(m_fd, (struct sockaddr *)m_address->addressPointer()
+    ::sockaddr_in *tmp = m_address->addressPointer();
+    if (::bind(m_fd, (struct sockaddr *)tmp
         , m_address->size()) == -1)
         throw error::SystemException("bind()");
 }
@@ -60,5 +53,18 @@ TcpConnection *TcpServer::accept()
         , (struct sockaddr *)&clientAddr, &sin_size)) == -1)
         throw error::SystemException("accept()");
 
-    return new TcpConnection(socket);
+    return new TcpConnection(socket, clientAddr);
+}
+
+void TcpServer::initSocket()
+{
+    int yes = 1;
+
+    if ((m_fd = ::socket(PF_INET, SOCK_STREAM, 0)) == -1)
+        throw error::SystemException("socket()");
+
+    /* Get rid from "the socket is already in use" message */
+    if (::setsockopt(m_fd, SOL_SOCKET
+        , SO_REUSEADDR, &yes, sizeof(int)) == -1) 
+        throw error::SystemException("setsockopt()");
 }

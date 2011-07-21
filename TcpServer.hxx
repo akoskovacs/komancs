@@ -23,6 +23,7 @@ namespace komancs
     private:
         TcpServer(const TcpServer &);
         TcpServer &operator =(const TcpServer &);
+        void initSocket();
 
         int m_fd;
         Ipv4Address *m_address;

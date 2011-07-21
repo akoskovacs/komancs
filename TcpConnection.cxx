@@ -1,13 +1,12 @@
 #include "Exceptions.hxx"
-#include "InetGlobals.hxx"
 #include "TcpConnection.hxx"
 
 #include <cstring>
 
 using namespace komancs;
 
-TcpConnection::TcpConnection(int fd)
-    :m_clientFd(fd) { }
+TcpConnection::TcpConnection(int fd, const Ipv4Address &addr)
+    :m_clientFd(fd), m_address(addr) { }
 
 void TcpConnection::send(const char *str)
 {
