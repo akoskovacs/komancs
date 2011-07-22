@@ -19,6 +19,8 @@ namespace komancs
 //      void setPort(int);
         void listen(int);
         TcpConnection *accept();
+        const Ipv4Address &address() const { return m_address; }
+        void setAddress(const Ipv4Address &addr) const { m_address = addr; }
 
     private:
         TcpServer(const TcpServer &);
