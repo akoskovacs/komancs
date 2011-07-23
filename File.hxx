@@ -9,39 +9,24 @@
 #include <unistd.h>
 
 namespace komancs {
-    namespace errors {
-        class komancs::File;
-        class FileNotFoundException : public Exception
-        {
-        public:
-            FileNotFoundException(const std::string &fname)
-                : m_fileName(fname), Exception("File " + fname + " not found!")
-            { }
-
-            FileNotFoundException(const komancs::File &f)
-                : m_fileName(f.fileName())
-                , Exception("File " + f.fileName() + " not found!")
-            { }
-
-        private:
-            std::string m_fileName;
-        };
-    }
-
     class File
     {
     public:
-        enum AccessMode { Read = R_OK, Write = W_OK, Execute = X_OK, Exist = F_OK }
+        enum AccessMode { Read = R_OK
+                        , Write = W_OK
+                        , Execute = X_OK
+                        , Exist = F_OK };
+
         File(const std::string &fileName
             , std::ios::openmode m = std::ios::read);
         File(const std::fstream &);
-        ~File();
+        ~File() { close(); }
 
-        void open();
-        void close();
+        File &open();
+        File &close();
 
         File &setFileName(const std::string &);
-        File &setOpenMode(FileMode);
+        File &setOpenMode(std::ios::openmode);
         std::ios::openmode openMode() const { return m_openMode; }
         const std::string &fileName() const { return m_fileName; }
         std::fstream &stream() { return m_file; }
@@ -59,6 +44,24 @@ namespace komancs {
         std::fstream m_file;
         bool m_isFileOpened;
     };
+
+    namespace error {
+        class FileNotFoundException : public Exception
+        {
+        public:
+            FileNotFoundException(const std::string &fname)
+                : m_fileName(fname), Exception("File " + fname + " not found!")
+            { }
+
+            FileNotFoundException(const komancs::File &f)
+                : m_fileName(f.fileName())
+                , Exception("File " + f.fileName() + " not found!")
+            { }
+
+        private:
+            std::string m_fileName;
+        };
+    }
 }
 
 #endif // FILE_HXX

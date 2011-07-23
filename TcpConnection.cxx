@@ -32,11 +32,9 @@ void TcpConnection::receive(char *buffer, int len)
     std::memset((char *)buffer, 0, (size_t)len);
     if (::recv(m_clientFd, (void *)buffer, (size_t)len, 0) == -1)
             throw new error::Exception("receive");
-
-    buffer[len] = '\0';
 }
 
 void TcpConnection::shutdown(enum How h)
 {
-    ::shutdown(m_clientFd, ShutReadWrite);
+    ::shutdown(m_clientFd, h);
 }
