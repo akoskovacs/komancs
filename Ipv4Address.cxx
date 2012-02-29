@@ -18,16 +18,16 @@ Ipv4Address::Ipv4Address(const struct ::sockaddr_in &addr)
 
 Ipv4Address::Ipv4Address(HostType type, int port)
 {
+    init();
     setPort(port);
     setHostType(type);
-    init();
 }
 
 Ipv4Address::Ipv4Address(const char *ip, int port)
 {
+    init();
     setPort(port);
     setAddress(ip);
-    init();
 }
 
 void Ipv4Address::setPort(int port)
@@ -35,7 +35,7 @@ void Ipv4Address::setPort(int port)
     if (port > 65536 || port < 0) 
         throw error::InvalidPortNumber(port);
 
-    m_address.sin_port = ::htons(port);
+    m_address.sin_port = htons(port);
 }
 
 void Ipv4Address::setAddress(const char *ip)
@@ -69,5 +69,5 @@ void Ipv4Address::init()
 
 void Ipv4Address::setHostType(HostType type)
 {
-    m_address.sin_addr.s_addr = ::htonl(type);
+    m_address.sin_addr.s_addr = htonl(type);
 }

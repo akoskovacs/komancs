@@ -11,20 +11,21 @@ namespace komancs
     class TcpServer
     {
     public:
-        TcpServer(const char *, int);
+        TcpServer(const char *, int, int);
         TcpServer(HostType, int);
-        TcpServer(const Ipv4Address &);
+        TcpServer(Ipv4Address *);
         ~TcpServer();
-        void bind();
 //      void setPort(int);
-        void listen(int);
         TcpConnection *accept();
 
     private:
         TcpServer(const TcpServer &);
         TcpServer &operator =(const TcpServer &);
+        void listen(int);
+        void bind();
 
         int m_fd;
+        bool m_addressIsOwn;
         Ipv4Address *m_address;
     };
 }

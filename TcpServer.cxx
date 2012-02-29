@@ -6,33 +6,41 @@
 
 using namespace komancs;
 
-TcpServer::TcpServer(const char *ip, int port)
+TcpServer::TcpServer(const char *ip, int port, int backlog = 10)
+    : m_addressIsOwn(true)
 {
     m_address = new Ipv4Address(ip, port);
+    if ((m_fd = ::socket(PF_INET, SOCK_STREAM, 0)) == -1)
+        throw error::SystemException("socket()");
+    bind();
+    listen(backlog);
 }
 
 TcpServer::TcpServer(HostType type, int port)
+    : m_addressIsOwn(true)
 {
     m_address = new Ipv4Address(type, port);
+    if ((m_fd = ::socket(PF_INET, SOCK_STREAM, 0)) == -1)
+        throw error::SystemException("socket()");
 }
 
-TcpServer::TcpServer(const Ipv4Address &addr)
+TcpServer::TcpServer(Ipv4Address *addr)
+    : m_addressIsOwn(false), m_address(addr)
 {
-    *m_address = addr;
+    if ((m_fd = ::socket(PF_INET, SOCK_STREAM, 0)) == -1)
+        throw error::SystemException("socket()");
 }
 
 TcpServer::~TcpServer()
 {
     ::shutdown(m_fd, SHUT_RDWR);
-    delete m_address;
+    if (m_addressIsOwn)
+        delete m_address;
 }
 
 void TcpServer::bind()
 {
     int yes = 1;
-
-    if ((m_fd = ::socket(AF_INET, SOCK_STREAM, 0)) == -1)
-        throw error::SystemException("socket()");
 
     /* Get rid from "the socket is already in use" message */
     if (::setsockopt(m_fd, SOL_SOCKET

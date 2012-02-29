@@ -2,6 +2,7 @@
 #define TCP_CONNECTION_HXX
 
 #include <string>
+#include <vector>
 
 namespace komancs {
     class TcpConnection
@@ -14,6 +15,7 @@ namespace komancs {
         void send(const char *);
         void send(const void *, int);
         void send(const std::string &);
+        template <class Iter> void send(Iter &begin, Iter &end);
         void receive(char *, int);
         std::string &receive();
         void shutdown(How h = ShutReadWrite);

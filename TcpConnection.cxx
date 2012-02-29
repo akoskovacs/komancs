@@ -11,7 +11,7 @@ TcpConnection::TcpConnection(int fd)
 
 void TcpConnection::send(const char *str)
 {
-    send((const void *)str, strlen(str) + 1);
+    send((const void *)str, strlen(str));
 }
 
 void TcpConnection::send(const void *data, int len)
@@ -20,14 +20,18 @@ void TcpConnection::send(const void *data, int len)
         throw new error::Exception("send");
 }
 
-void TcpConnection::send(const std::string &str)
+template <class Iter>
+void TcpConnection::send(Iter &begin, Iter &end)
 {
-    send(str.c_str());
+    for (Iter it = begin; it != end; it++) {
+        send(reinterpret_cast<void *>(&(*it)), sizeof(*it));
+    }
 }
 
 void TcpConnection::receive(char *buffer, int len)
 {
-    if (len < 0)
+    len--;
+    if (len < 0 || buffer == 0)
         throw new error::Exception("receive");
 
     std::memset((char *)buffer, 0, (size_t)len);
