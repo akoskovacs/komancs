@@ -22,6 +22,8 @@ TcpServer::TcpServer(HostType type, int port)
     m_address = new Ipv4Address(type, port);
     if ((m_fd = ::socket(PF_INET, SOCK_STREAM, 0)) == -1)
         throw error::SystemException("socket()");
+    bind();
+    listen(10);
 }
 
 TcpServer::TcpServer(Ipv4Address *addr)
@@ -29,6 +31,8 @@ TcpServer::TcpServer(Ipv4Address *addr)
 {
     if ((m_fd = ::socket(PF_INET, SOCK_STREAM, 0)) == -1)
         throw error::SystemException("socket()");
+    bind();
+    listen(110);
 }
 
 TcpServer::~TcpServer()
@@ -63,7 +67,7 @@ TcpConnection *TcpServer::accept()
 {
     int socket;
     struct sockaddr_in clientAddr; 
-    socklen_t sin_size = m_address->size();
+    socklen_t sin_size = sizeof(struct sockaddr_in);
 	if ((socket = ::accept(m_fd
         , (struct sockaddr *)&clientAddr, &sin_size)) == -1)
         throw error::SystemException("accept()");
